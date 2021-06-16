@@ -9,6 +9,7 @@ const routes = function() {
     const matchController = controllers.matchController(db);
 
     apiRoute.route("/matches").get(matchController.fetchMatches);
+    apiRoute.route("/matchinfo").get(matchController.fetchMatchesInfo);
     
 
     return apiRoute;
