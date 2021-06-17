@@ -12,8 +12,14 @@ const routes = function() {
 
     apiRoute.route("/matches").get(matchController.fetchMatches);
     apiRoute.route("/matchinfo").get(matchController.fetchMatchesInfo);
+    apiRoute.route('/match/:scrimMatchId/result').get(matchController.fetchMatchResults);
+    apiRoute.route('/match/:scrimMatchId/players').get(matchController.fetchMatchPlayers);
+    apiRoute.route('/match/:scrimMatchId/players/stats').get(matchController.fetchMatchPlayersStats);
+
+
 
     apiRoute.route("/players").get(playerController.fetchAllPlayers);
+    apiRoute.route("/players/:characterId/matches").get(playerController.fetchPlayerMatches);
     
 
     return apiRoute;

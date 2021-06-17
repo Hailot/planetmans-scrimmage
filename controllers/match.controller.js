@@ -8,17 +8,17 @@ const matchController = (DATABASES) => {
           "ScrimMatch.Id": "ScrimMatchRoundConfiguration.ScrimMatchId",
         })
         .select("*");
-        matches1.forEach(match => {
-            matchesArray.push(match);
-        });
+      matches1.forEach(async (match) => {
+        matchesArray.push(match);
+      });
       const matches2 = await DATABASES.euSpringScrimsDb("ScrimMatch")
         .join("ScrimMatchRoundConfiguration", {
           "ScrimMatch.Id": "ScrimMatchRoundConfiguration.ScrimMatchId",
         })
         .select("*");
-        matches2.forEach(match => {
-            matchesArray.push(match);
-        });
+      matches2.forEach(async (match) => {
+        matchesArray.push(match);
+      });
 
       return res.status(200).json(matchesArray);
     } catch (error) {
@@ -26,19 +26,53 @@ const matchController = (DATABASES) => {
     }
   };
 
-  const fetchMatchResults = async (req, res, next) => { 
-      try {
-        const { matchId } = await req.body;
-        const results = await DATABASES.planetmansDb("ScrimMatchTeamResult").where({ScrimMatchId: matchId}).select("*");
-        return res.status(200).json(results);
+  const fetchMatchResults = async (req, res, next) => {
+    try {
+      const results = await DATABASES.planetmansDb("ScrimMatchTeamResult")
+        .where({ ScrimMatchId: req.params.scrimMatchId })
+        .select("*");
+      return res.status(200).json(results);
+    } catch (error) {
+      return res.status(500).json({ message: `${JSON.stringify(error)}` });
+    }
+  };
 
-      } catch (error) {
-        return res.status(500).json({ message: `${JSON.stringify(error)}` });
-
-      }
-
-
-  }
+  const fetchMatchPlayers = async (req, res, next) => {
+    try {
+      const players = {};
+      players.team1 = await DATABASES.planetmansDb(
+        "ScrimMatchParticipatingPlayer"
+      )
+        .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 1 })
+        .select("*");
+      players.team2 = await DATABASES.planetmansDb(
+        "ScrimMatchParticipatingPlayer"
+      )
+        .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 2 })
+        .select("*");
+      return res.status(200).json(players);
+    } catch (error) {
+      return res.status(500).json({ message: `${JSON.stringify(error)}` });
+    }
+  };
+  const fetchMatchPlayersStats = async (req, res, next) => {
+    try {
+      const players = {};
+      players.team1 = await DATABASES.planetmansDb(
+        "View_ScrimMatchReportInfantryPlayerRoundStats"
+      )
+        .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 1 })
+        .select("*");
+      players.team2 = await DATABASES.planetmansDb(
+        "View_ScrimMatchReportInfantryPlayerRoundStats"
+      )
+        .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 2 })
+        .select("*");
+      return res.status(200).json(players);
+    } catch (error) {
+      return res.status(500).json({ message: `${JSON.stringify(error)}` });
+    }
+  };
 
   const fetchMatchesInfo = async (req, res, next) => {
     try {
@@ -61,6 +95,9 @@ const matchController = (DATABASES) => {
   return {
     fetchMatches,
     fetchMatchesInfo,
+    fetchMatchResults,
+    fetchMatchPlayers,
+    fetchMatchPlayersStats,
   };
 };
 
