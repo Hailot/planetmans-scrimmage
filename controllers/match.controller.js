@@ -8,13 +8,17 @@ const matchController = (DATABASES) => {
           "ScrimMatch.Id": "ScrimMatchRoundConfiguration.ScrimMatchId",
         })
         .select("*");
-      matchesArray.push(matches1);
+        matches1.forEach(match => {
+            matchesArray.push(match);
+        });
       const matches2 = await DATABASES.euSpringScrimsDb("ScrimMatch")
         .join("ScrimMatchRoundConfiguration", {
           "ScrimMatch.Id": "ScrimMatchRoundConfiguration.ScrimMatchId",
         })
         .select("*");
-      matchesArray.push(matches2);
+        matches2.forEach(match => {
+            matchesArray.push(match);
+        });
 
       return res.status(200).json(matchesArray);
     } catch (error) {
