@@ -9,6 +9,9 @@
     "start": "node index.js"
 
   },
+  "engines": {
+    "node": "16.1.x"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
