@@ -78,9 +78,17 @@ const matchController = (DATABASES) => {
       try {
         const matchId = req.params.scrimMatchId;
         const players = {};
-        players.team1 = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 1}).select('*');
-        players.team2 = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 2}).select('*');
-        return res.status(200).json(players);
+        const team1 = {};
+        const team2 = {};
+        team1.death = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, VictimTeamOrdinal: 1}).select('*');
+        team1.kill = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 1}).select('*');
+        players.team1 = team1;
+        team2.death = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, VictimTeamOrdinal: 2}).select('*');
+        team2.kill = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 2}).select('*');
+        players.team2 = team2;
+
+        //players.team2 = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 2}).select('*');
+        return res.status(200).json(players );
       } catch (error) {
 
         return res.status(500).json({ message: `${JSON.stringify(error)}` });

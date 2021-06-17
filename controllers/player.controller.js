@@ -39,10 +39,62 @@ const playerController = (DATABASES) => {
         }
     }
 
+    const fetchPlayerKillboard = async (req, res, next) => {
+        try { 
+            const playerId = req.params.characterId;
+            const kills = Array();
+            const deaths = Array();
+            const player = {};
+            const kill1 = await DATABASES.planetmansDb('ScrimDeath').where('AttackerCharacterId', playerId).select('*');
+            kills.push(kill1);
+            const death1 = await DATABASES.planetmansDb('ScrimDeath').where('VictimCharacterId', playerId).select('*');
+            deaths.push(death1);
+            const kill2 = await DATABASES.euSpringScrimsDb('ScrimDeath').where('AttackerCharacterId', playerId).select('*');
+            kills.push(kill2);
+            const death2 = await DATABASES.euSpringScrimsDb('ScrimDeath').where('VictimCharacterId', playerId).select('*');
+            deaths.push(death2);
+            player.kill = kills;
+            player.death = deaths;
+            return res.status(200).json(player);
+        } catch (error) {
+            return res.status(500).json({ message: `${JSON.stringify(error)}` });
+
+        }
+    }
+
+    const fetchPlayerInfantryStats = async (req, res, next) => {
+        try { } catch (error) {
+            return res.status(500).json({ message: `${JSON.stringify(error)}` });
+        }
+
+    }
+
+    const findPlayerByName = async (req, res, next) => {
+        try {
+            const playerName = req.params.characterName;
+            const chars = Array();
+            const pilChars = DATABASES.planetmansDb('ScrimMatchParticipatingPlayer').whereRaw('NameFull like ?',[playerName]).select('*');
+            pilChars.forEach(char => {
+                chars.push(char);
+            })
+            const euSpring = DATABASES.euSpringScrimsDb('ScrimMatchParticipatingPlayer').whereRaw('NameFull like ?',[playerName]).select('*');
+            euSpring.forEach(char => {
+                chars.push(char);
+            })
+            return res.status(200).json(chars);
+
+        } catch (error) {
+            return res.status(500).json({ message: `${JSON.stringify(error)}` });
+        }
+     }
+
     return {
         fetchAllPlayers,
         fetchPlayerMatches,
-        fetchPlayerMatchesStats
+        fetchPlayerMatchesStats,
+        fetchPlayerKillboard,
+        findPlayerByName
+        //fetchPlayerInfantryStats
     };
 }
 
