@@ -20,7 +20,8 @@ const routes = function() {
 
     apiRoute.route("/players").get(playerController.fetchAllPlayers);
     apiRoute.route("/players/:characterId/matches").get(playerController.fetchPlayerMatches);
-    
+    apiRoute.route("/players/:characterId/matches/stats").get(playerController.fetchPlayerMatchesStats);
+
 
     return apiRoute;
 }

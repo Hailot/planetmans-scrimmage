@@ -29,10 +29,20 @@ const playerController = (DATABASES) => {
 
         }
     }
+    const fetchPlayerMatchesStats = async (req, res, next) => {
+        try {
+            const matches = await DATABASES.planetmansDb("View_ScrimMatchReportInfantryPlayerRoundStats").where('CharacterId', req.params.characterId).select('*');
+            return res.status(200).json(matches);
+        } catch (error) {
+            return res.status(500).json({ message: `${JSON.stringify(error)}` });
+
+        }
+    }
 
     return {
         fetchAllPlayers,
-        fetchPlayerMatches
+        fetchPlayerMatches,
+        fetchPlayerMatchesStats
     };
 }
 
