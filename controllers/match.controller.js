@@ -1,3 +1,4 @@
+const dbHelper = require('../utils/dbhelper.util');
 const matchController = (DATABASES) => {
   const fetchMatches = async (req, res, next) => {
     try {
@@ -28,7 +29,9 @@ const matchController = (DATABASES) => {
 
   const fetchMatchResults = async (req, res, next) => {
     try {
-      const results = await DATABASES.planetmansDb("ScrimMatchTeamResult")
+      const matchId = req.params.scrimMatchId;
+      const db = await DATABASES.determineOrigDbfromMatchId(matchId);
+      const results = await db("ScrimMatchTeamResult")
         .where({ ScrimMatchId: req.params.scrimMatchId })
         .select("*");
       return res.status(200).json(results);
@@ -39,13 +42,15 @@ const matchController = (DATABASES) => {
 
   const fetchMatchPlayers = async (req, res, next) => {
     try {
+      const matchId = req.params.scrimMatchId;
+      const db = await DATABASES.determineOrigDbfromMatchId(matchId);
       const players = {};
-      players.team1 = await DATABASES.planetmansDb(
+      players.team1 = await db(
         "ScrimMatchParticipatingPlayer"
       )
         .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 1 })
         .select("*");
-      players.team2 = await DATABASES.planetmansDb(
+      players.team2 = await db(
         "ScrimMatchParticipatingPlayer"
       )
         .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 2 })
@@ -57,13 +62,15 @@ const matchController = (DATABASES) => {
   };
   const fetchMatchPlayersStats = async (req, res, next) => {
     try {
+      const matchId = req.params.scrimMatchId;
+      const db = await DATABASES.determineOrigDbfromMatchId(matchId);
       const players = {};
-      players.team1 = await DATABASES.planetmansDb(
+      players.team1 = await db(
         "View_ScrimMatchReportInfantryPlayerRoundStats"
       )
         .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 1 })
         .select("*");
-      players.team2 = await DATABASES.planetmansDb(
+      players.team2 = await db(
         "View_ScrimMatchReportInfantryPlayerRoundStats"
       )
         .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 2 })
@@ -77,14 +84,15 @@ const matchController = (DATABASES) => {
   const fetchMatchPlayersKillboard = async (req, res, next) => {
       try {
         const matchId = req.params.scrimMatchId;
+        const db = await DATABASES.determineOrigDbfromMatchId(matchId);
         const players = {};
         const team1 = {};
         const team2 = {};
-        team1.death = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, VictimTeamOrdinal: 1}).select('*');
-        team1.kill = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 1}).select('*');
+        team1.death = await db("ScrimDeath").where({ScrimMatchId: matchId, VictimTeamOrdinal: 1}).select('*');
+        team1.kill = await db("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 1}).select('*');
         players.team1 = team1;
-        team2.death = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, VictimTeamOrdinal: 2}).select('*');
-        team2.kill = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 2}).select('*');
+        team2.death = await db("ScrimDeath").where({ScrimMatchId: matchId, VictimTeamOrdinal: 2}).select('*');
+        team2.kill = await db("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 2}).select('*');
         players.team2 = team2;
 
         //players.team2 = await DATABASES.planetmansDb("ScrimDeath").where({ScrimMatchId: matchId, AttackerTeamOrdinal: 2}).select('*');
