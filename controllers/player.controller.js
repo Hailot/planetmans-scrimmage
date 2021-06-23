@@ -76,14 +76,8 @@ const playerController = (DATABASES) => {
 
             let pilChars = await DATABASES.planetmansDb('View_ScrimMatchReportInfantryPlayerStats').where('NameDisplay','like','%'+playerName+'%').select('*');
             let euSpring = await DATABASES.euSpringScrimsDb('View_ScrimMatchReportInfantryPlayerStats').where('NameDisplay','like','%'+playerName+'%').select('*');
-            let matches = await Promise.all(
-                pilChars.map(async match => {
-                    return match
-                }),
-                euSpring.map(async match => {
-                    return match
-                })
-            )
+
+            let matches = pilChars.concat(euSpring)
             return res.status(200).json(matches);
 
 
