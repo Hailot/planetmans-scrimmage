@@ -72,16 +72,20 @@ const playerController = (DATABASES) => {
     const findPlayerByName = async (req, res, next) => {
         try {
             const playerName = req.params.characterName;
-            const chars = Array();
-            const pilChars = DATABASES.planetmansDb('ScrimMatchParticipatingPlayer').whereRaw('NameFull like ?',[playerName]).select('*');
-            pilChars.forEach(char => {
-                chars.push(char);
-            })
-            const euSpring = DATABASES.euSpringScrimsDb('ScrimMatchParticipatingPlayer').whereRaw('NameFull like ?',[playerName]).select('*');
-            euSpring.forEach(char => {
-                chars.push(char);
-            })
-            return res.status(200).json(chars);
+
+
+            let pilChars = await DATABASES.planetmansDb('View_ScrimMatchReportInfantryPlayerStats').where('NameDisplay','like','%'+playerName+'%').select('*');
+            let euSpring = await DATABASES.euSpringScrimsDb('View_ScrimMatchReportInfantryPlayerStats').where('NameDisplay','like','%'+playerName+'%').select('*');
+            let matches = await Promise.all(
+                pilChars.map(async match => {
+                    return match
+                }),
+                euSpring.map(async match => {
+                    return match
+                })
+            )
+            return res.status(200).json(matches);
+
 
         } catch (error) {
             return res.status(500).json({ message: `${JSON.stringify(error)}` });

@@ -64,18 +64,43 @@ const matchController = (DATABASES) => {
     try {
       const matchId = req.params.scrimMatchId;
       const db = await DATABASES.determineOrigDbfromMatchId(matchId);
-      const players = {};
-      players.team1 = await db(
-        "View_ScrimMatchReportInfantryPlayerRoundStats"
+      let matchPlayers = await db(
+          'ScrimMatchParticipatingPlayer')
+          .where({ ScrimMatchId: req.params.scrimMatchId})
+          .select('*')
+      let players = await Promise.all(
+          matchPlayers.map(async player => {
+            let playerStat= {};
+            playerStat.team = player.TeamOrdinal;
+            playerStat.total = await db(
+                'View_ScrimMatchReportInfantryPlayerStats'
+            ).where({ ScrimMatchId:req.params.scrimMatchId, CharacterId: player.CharacterId})
+                .select('*');
+            playerStat.perRound = await db(
+                'View_ScrimMatchReportInfantryPlayerRoundStats'
+            ).where({ ScrimMatchId:req.params.scrimMatchId, CharacterId: player.CharacterId})
+                .select('*');
+            return playerStat;
+          })
       )
-        .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 1 })
-        .select("*");
-      players.team2 = await db(
-        "View_ScrimMatchReportInfantryPlayerRoundStats"
-      )
-        .where({ ScrimMatchId: req.params.scrimMatchId, TeamOrdinal: 2 })
-        .select("*");
-      return res.status(200).json(players);
+      console.log(players)
+      let sortedPlayers = {
+        team1: [],
+        team2: []
+      };
+      players.forEach(player => {
+        switch (player.team) {
+          case 1:
+            sortedPlayers.team1.push(player);
+            break;
+          case 2:
+            sortedPlayers.team2.push(player);
+            break;
+          default:
+            break
+        }
+      })
+      return res.status(200).json(sortedPlayers);
     } catch (error) {
       return res.status(500).json({ message: `${JSON.stringify(error)}` });
     }
