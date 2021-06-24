@@ -93,7 +93,7 @@ const playerController = (DATABASES) => {
 
             let pilWeapons = await DATABASES.planetmansDb.raw(`
                             SELECT 
-                                WeaponId
+                                WeaponId,
                                 WeaponName,
                                 SUM(Kills) as kills,
                                 COUNT(WeaponId) as match_usages, 
@@ -120,7 +120,13 @@ const playerController = (DATABASES) => {
                             GROUP BY WeaponId, WeaponName
                             ORDER BY WeaponId`,['%'+playerName+'%'])
             let weaponStats = pilWeapons.concat(euSpringWeapoms)
-            return res.status(200).json(weaponStats);
+            var _ = require('lodash');
+            let grouped = _.groupBy(weaponStats,'WeaponId')
+            let stats = grouped.map(weapon => {
+               console.log(weapon)
+            })
+
+            return res.status(200).json(grouped);
         } catch (error) {
             console.log(error)
             return res.status(500).json({message: `${JSON.stringify(error)}`});
