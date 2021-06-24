@@ -220,7 +220,15 @@
       "get": {
         "tags": ["Match"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+          "name": "scrimMatchId",
+          "in": "path",
+          "required": true,
+          "description": "ID of Match that we want to find",
+          "type": "string"
+          } 
+        ],
         "responses": {}
       }
     },
@@ -228,7 +236,15 @@
       "get": {
         "tags": ["Match"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "scrimMatchId",
+            "in": "path",
+            "required": true,
+            "description": "ID of Match that we want to find",
+            "type": "string"
+            } 
+        ],
         "responses": {}
       }
     },
@@ -236,7 +252,15 @@
       "get": {
         "tags": ["Match"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "scrimMatchId",
+            "in": "path",
+            "description": "ID of Match that we want to find",
+            "required": true,
+            "type": "string"
+            } 
+        ],
         "responses": {}
       }
     },
@@ -244,7 +268,15 @@
       "get": {
         "tags": ["Match"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "scrimMatchId",
+            "in": "path",
+            "required": true,
+            "description": "ID of Match that we want to find",
+            "type": "string"
+            } 
+        ],
         "responses": {}
       }
     },
@@ -260,7 +292,15 @@
       "get": {
         "tags": ["Player"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "description": "The Alias or Displayed Name of the player",
+            "type": "string"
+          } 
+        ],
         "responses": {}
       }
     },
@@ -268,7 +308,15 @@
       "get": {
         "tags": ["Player"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "description": "The Alias or Displayed Name of the player",
+            "type": "string"
+          } 
+        ],
         "responses": {}
       }
     },
@@ -276,7 +324,15 @@
       "get": {
         "tags": ["Player"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "characterId",
+            "in": "path",
+            "required": true,
+            "description": "ID of Character that we want to find",
+            "type": "string"
+            } 
+        ],
         "responses": {}
       }
     },
@@ -284,7 +340,15 @@
       "get": {
         "tags": ["Player"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "characterId",
+            "in": "path",
+            "required": true,
+            "description": "ID of Character that we want to find",
+            "type": "string"
+            } 
+        ],
         "responses": {}
       }
     },
@@ -292,7 +356,15 @@
       "get": {
         "tags": ["Player"],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "characterId",
+            "in": "path",
+            "required": true,
+            "description": "ID of Character that we want to find",
+            "type": "string"
+            } 
+        ],
         "responses": {}
       }
     }
