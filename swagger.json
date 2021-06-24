@@ -1,23 +1,30 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1.0.0", 
-      "title": "Planetmans Scrimmage Data Api",
-      "description": "Api collection of multiple data sources for scrimmage",
-      "license": {
-        "name": "MIT",
-        "url": "https://opensource.org/licenses/MIT"
-      }
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Planetmans-Scrimmage Data API",
+    "description": "Documentation for planetmans scrimmage data api",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers":[
+    {
+      "url": "https://planetmans-scrimmage.herokuapp.com",
+      "description":" Production server (uses live data) " 
     },
-    "host": "localhost:3000",
-    "basePath": "/api",
+    {
+      "url": "http://localhost:3000",
+      "description":" Local development server (requires running app locally) " 
+    }
+
+  ],
     "tags": [
       {
         "name": "Users",
         "description": "API for users in the system"
       }
-    ],
-    "schemes": ["http"],
-    "consumes": ["application/json"],
-    "produces": ["application/json"]
+    ]
+  
   }

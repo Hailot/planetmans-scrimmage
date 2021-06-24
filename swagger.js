@@ -2,16 +2,23 @@ const swaggerAutogen = require('swagger-autogen')()
 
 
 const doc = {
+    openapi: "3.0.0",
     info: {
         version: "1.0.0",
         title: "Planetmans Scrimmage Data Api",
         description: "Documentation for the Data"
     },
-    host: "localhost:3000",
-    basePath: "/",
-    schemes: ['http', 'https'],
-    consumes: ['application/json'],
-    produces: ['application/json'],
+    servers:[
+        {
+          "url": "https://planetmans-scrimmage.herokuapp.com",
+          "description":" Production server (uses live data) " 
+        },
+        {
+          "url": "http://localhost:3000",
+          "description":" Local development server (requires running app locally) " 
+        }
+    
+      ],
     tags: [
         {
             "name": "Match",

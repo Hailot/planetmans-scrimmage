@@ -2,10 +2,10 @@
   "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
-    "title": "Planetmans-Scrimmage Data API",
-    "description": "Documentation for planetmans scrimmage data api"
+    "title": "Planetmans Scrimmage Data Api",
+    "description": "Documentation for the Data"
   },
-  "host": "planetmans-scrimmage.herokuapp.com",
+  "host": "localhost:3000",
   "basePath": "/",
   "tags": [
     {
@@ -14,19 +14,195 @@
     }
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "securityDefinitions": {},
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "consumes": [],
+  "produces": [],
   "paths": {
+    "/": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/auth/verify/{token}": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/auth/verify/resend": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/auth/": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/matches": {
       "get": {
-        "tags": [],
+        "tags": ["Match"],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -34,7 +210,7 @@
     },
     "/api/matchinfo": {
       "get": {
-        "tags": [],
+        "tags": ["Match"],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -42,71 +218,55 @@
     },
     "/api/match/{scrimMatchId}/result": {
       "get": {
-        "tags": [],
+        "tags": ["Match"],
         "description": "",
-        "parameters": [
-            {
-                "name": "scrimMatchId",
-                "in": "path",
-                "required": true,
-                "description": "ID of Match that we want to find",
-                "type": "string"
-            }
-        ],
+        "parameters": [],
         "responses": {}
       }
     },
     "/api/match/{scrimMatchId}/players": {
       "get": {
-        "tags": [],
+        "tags": ["Match"],
         "description": "",
-        "parameters": [
-            {
-                "name": "scrimMatchId",
-                "in": "path",
-                "required": true,
-                "description": "ID of Match that we want to find",
-                "type": "string"
-            }
-        ],
+        "parameters": [],
         "responses": {}
       }
     },
     "/api/match/{scrimMatchId}/players/stats": {
       "get": {
-        "tags": [],
+        "tags": ["Match"],
         "description": "",
-        "parameters": [
-            {
-                "name": "scrimMatchId",
-                "in": "path",
-                "required": true,
-                "description": "ID of Match that we want to find",
-                "type": "string"
-            }
-        ],
+        "parameters": [],
         "responses": {}
       }
     },
     "/api/match/{scrimMatchId}/players/killboard": {
       "get": {
-        "tags": [],
+        "tags": ["Match"],
         "description": "",
-        "parameters": [
-            {
-                "name": "scrimMatchId",
-                "in": "path",
-                "required": true,
-                "description": "ID of Match that we want to find",
-                "type": "string"
-            }
-        ],
+        "parameters": [],
         "responses": {}
       }
     },
     "/api/players": {
       "get": {
-        "tags": [],
+        "tags": ["Player"],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/players/name/{characterName}": {
+      "get": {
+        "tags": ["Player"],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/players/name/{characterName}/weapons": {
+      "get": {
+        "tags": ["Player"],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -114,54 +274,38 @@
     },
     "/api/players/{characterId}/matches": {
       "get": {
-        "tags": [],
+        "tags": ["Player"],
         "description": "",
-        "parameters": [            
-            {
-            "name": "characterId",
-            "in": "path",
-            "required": true,
-            "description": "ID of character that we want to find",
-            "type": "Integer"
-            }
-    ],
+        "parameters": [],
         "responses": {}
       }
     },
     "/api/players/{characterId}/matches/stats": {
       "get": {
-        "tags": [],
+        "tags": ["Player"],
         "description": "",
-        "parameters": [
-            {
-                "name": "characterId",
-                "in": "path",
-                "required": true,
-                "description": "ID of character that we want to find",
-                "type": "Integer"
-                
-            }
-        ],
+        "parameters": [],
         "responses": {}
       }
     },
     "/api/players/{characterId}/killboard": {
       "get": {
-        "tags": [],
+        "tags": ["Player"],
         "description": "",
-        "parameters": [
-            {
-                "name": "characterId",
-                "in": "path",
-                "required": true,
-                "description": "ID of character that we want to find",
-                "type": "Integer"
-                
-            }
-        ],
+        "parameters": [],
         "responses": {}
       }
     }
   },
-  "definitions": {}
+  "definitions": {},
+  "servers": [
+    {
+      "url": "https://planetmans-scrimmage.herokuapp.com",
+      "description": " Production server (uses live data) "
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": " Local development server (requires running app locally) "
+    }
+  ]
 }

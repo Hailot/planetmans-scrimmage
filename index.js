@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 const connectToMongoDB = require("./database/mongo");
 
 // Connect to MongoDB
-connectToMongoDB();
+//connectToMongoDB();
 
 
 // using bodyParser to parse JSON bodies into JS objects
@@ -25,7 +25,7 @@ app.use(morgan('combined'));
 const swaggerUi = require('swagger-ui-express'),
 swaggerDocument = require('./swagger_output.json');
 
-app.use("/api/auth", require("./routes/api/auth"));
+//app.use("/api/auth", require("./routes/api/auth"));
 const defaultRoutes = require("./routes")();
 
 app.use("/api", defaultRoutes);
