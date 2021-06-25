@@ -90,43 +90,53 @@ const playerController = (DATABASES) => {
     const getPlayerWeaponStatsByPlayerName = async (req, res, next) => {
         try {
             const playerName = req.params.characterName;
+            let query = `
+                                SELECT 
+                                WeaponId,
+                                WeaponName,
+                                SUM(Kills) as kills,
+                                COUNT(WeaponId) as match_usages, 
+                                SUM(HeadshotKills) as headshots, 
+                                SUM(Deaths) as deaths, 
+                                SUM(HeadshotDeaths) as headshotDeaths,
+                                SUM(Teamkills) as teamkills, 
+                                SUM(AssistedKills) as assistedkills
+                            FROM View_ScrimMatchReportInfantryPlayerWeaponStats
+                            WHERE NameDisplay LIKE ?
+                            GROUP BY WeaponId, WeaponName
+                            ORDER BY WeaponId`
+            let pilWeapons = await DATABASES.planetmansDb.raw(query,['%'+playerName+'%'])
+            let euSpringWeapons = await DATABASES.euSpringScrimsDb.raw(query,['%'+playerName+'%'])
+            console.log(pilWeapons.length);
+            console.log(euSpringWeapons.length);
 
-            let pilWeapons = await DATABASES.planetmansDb.raw(`
-                            SELECT 
-                                WeaponId,
-                                WeaponName,
-                                SUM(Kills) as kills,
-                                COUNT(WeaponId) as match_usages, 
-                                SUM(HeadshotKills) as headshots, 
-                                SUM(Deaths) as deaths, 
-                                SUM(Teamkills) as teamkills, 
-                                SUM(AssistedKills) as assistedkills
-                            FROM View_ScrimMatchReportInfantryPlayerWeaponStats
-                            WHERE NameDisplay LIKE ?
-                            GROUP BY WeaponId, WeaponName
-                            ORDER BY WeaponId`,['%'+playerName+'%'])
-            let euSpringWeapoms = await DATABASES.euSpringScrimsDb.raw(`
-                            SELECT 
-                                WeaponId,
-                                WeaponName,
-                                SUM(Kills) as kills,
-                                COUNT(WeaponId) as match_usages, 
-                                SUM(HeadshotKills) as headshots, 
-                                SUM(Deaths) as deaths, 
-                                SUM(Teamkills) as teamkills, 
-                                SUM(AssistedKills) as assistedkills
-                            FROM View_ScrimMatchReportInfantryPlayerWeaponStats
-                            WHERE NameDisplay LIKE ?
-                            GROUP BY WeaponId, WeaponName
-                            ORDER BY WeaponId`,['%'+playerName+'%'])
-            let weaponStats = pilWeapons.concat(euSpringWeapoms)
-            var _ = require('lodash');
-            let grouped = _.groupBy(weaponStats,'WeaponId')
-            let stats = grouped.map(weapon => {
-               console.log(weapon)
+            let weaponStats = pilWeapons.concat(euSpringWeapons)
+            let weaponsArray = {};
+            weaponStats.forEach( item => {
+                weapon = weaponsArray[item.WeaponId]
+                if(weapon) {
+                        weapon.kills+= item.kills,
+                        weapon.headshots+= item.headshots,
+                        weapon.deaths+= item.deaths,
+                        weapon.headshotDeaths+= item.headshotDeaths,
+                        weapon.teamKill+= item.teamKill,
+                        weapon.assistedkills+= item.assistedkills
+                }else {
+                    weaponsArray[item.WeaponId] = {
+                        weaponId: item.WeaponId,
+                        weaponName: item.WeaponName,
+                        kills: item.kills,
+                        headshots: item.headshots,
+                        deaths: item.deaths,
+                        headshotDeaths: item.headshotDeaths,
+                        teamKill: item.teamKill,
+                        assistedkills: item.assistedkills,
+                    }
+                }
             })
 
-            return res.status(200).json(grouped);
+
+            return res.status(200).json(weaponsArray);
         } catch (error) {
             console.log(error)
             return res.status(500).json({message: `${JSON.stringify(error)}`});
